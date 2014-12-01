@@ -10,6 +10,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import com.ilyarudyak.android.criminalintent.model.Crime;
@@ -57,6 +60,9 @@ public class CrimeActivity extends Activity {
     public static class CrimeFragment extends Fragment {
 
         private Crime mCrime;
+        private Button mDateButton;
+        private CheckBox mSolvedCheckBox;
+
         private EditText mTitleField;
 
         @Override
@@ -85,6 +91,18 @@ public class CrimeActivity extends Activity {
 
                 public void afterTextChanged(Editable c) {
                     // this one too
+                }
+            });
+
+            mDateButton = (Button)rootView.findViewById(R.id.crime_date);
+            mDateButton.setText(mCrime.getDate().toString());
+            mDateButton.setEnabled(false);
+
+            mSolvedCheckBox = (CheckBox)rootView.findViewById(R.id.crime_solved);
+            mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    // set the crime's solved property
+                    mCrime.setSolved(isChecked);
                 }
             });
 
