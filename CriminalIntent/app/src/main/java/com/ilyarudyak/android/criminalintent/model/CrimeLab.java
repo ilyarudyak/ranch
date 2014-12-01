@@ -3,6 +3,7 @@ package com.ilyarudyak.android.criminalintent.model;
 import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by ilyarudyak on 02/12/14.
@@ -30,6 +31,14 @@ public class CrimeLab {
             sCrimeLab = new CrimeLab(c.getApplicationContext());
         }
         return sCrimeLab;
+    }
+
+    public Crime getCrime(UUID id) {
+        for (Crime c : mCrimes) {
+            if (c.getId().equals(id))
+                return c;
+        }
+        return null;
     }
 
     public ArrayList<Crime> getCrimes() {
