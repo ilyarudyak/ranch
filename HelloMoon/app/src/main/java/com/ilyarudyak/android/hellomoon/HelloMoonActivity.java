@@ -74,7 +74,6 @@ public class HelloMoonActivity extends Activity {
                 public void onClick(View v) {
                     mPlayer.play(getActivity());
                     updateButtons();
-//                    mPlayButton.setEnabled(false);
                 }
             });
 
@@ -82,8 +81,8 @@ public class HelloMoonActivity extends Activity {
 
                 @Override
                 public void onClick(View view) {
-//                    mPlayer.pause();
-//                    mPlayButton.setEnabled(true);
+                    mPlayer.pause();
+                    mPlayButton.setEnabled(true);
                 }
             });
 
@@ -91,7 +90,6 @@ public class HelloMoonActivity extends Activity {
                 public void onClick(View v) {
                     mPlayer.stop();
                     updateButtons();
-//                    mPlayButton.setEnabled(true);
                 }
             });
 
@@ -99,7 +97,7 @@ public class HelloMoonActivity extends Activity {
         }
 
         private void updateButtons() {
-            boolean isEnabled = !mPlayer.isPlaying();
+            boolean isEnabled = !mPlayer.isPlayerCreated();
             mPlayButton.setEnabled(isEnabled);
         }
 

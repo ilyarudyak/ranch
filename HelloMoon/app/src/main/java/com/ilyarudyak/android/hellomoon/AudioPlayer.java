@@ -8,28 +8,34 @@ public class AudioPlayer {
     private MediaPlayer mPlayer;
 
     public void stop() {
-        if (mPlayer != null) {
+        if (isPlayerCreated()) {
             mPlayer.release();
             mPlayer = null;
         }
     }
 
+    public void pause() {
+        if (isPlayerCreated())
+            mPlayer.pause();
+    }
+
     public void play(Context c) {
 
-        stop();
+        if (!isPlayerCreated()) {
 
-        mPlayer = MediaPlayer.create(c, R.raw.one_small_step);
+            mPlayer = MediaPlayer.create(c, R.raw.one_small_step);
 
-        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            public void onCompletion(MediaPlayer mp) {
-                stop();
-            }
-        });
+            mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    stop();
+                }
+            });
+        }
 
         mPlayer.start();
     }
 
-    public boolean isPlaying() {
+    public boolean isPlayerCreated() {
         return mPlayer != null;
     }
 
