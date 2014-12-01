@@ -1,15 +1,18 @@
 package com.ilyarudyak.android.criminalintent;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
+import android.widget.EditText;
+
+import com.ilyarudyak.android.criminalintent.model.Crime;
 
 
 public class CrimeActivity extends Activity {
@@ -20,7 +23,7 @@ public class CrimeActivity extends Activity {
         setContentView(R.layout.activity_crime);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, new CrimeFragment())
                     .commit();
         }
     }
@@ -51,16 +54,61 @@ public class CrimeActivity extends Activity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class CrimeFragment extends Fragment {
 
-        public PlaceholderFragment() {
+        private Crime mCrime;
+        private EditText mTitleField;
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            mCrime = new Crime();
+        }
+
+        public CrimeFragment() {
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_crime, container, false);
+
+            mTitleField = (EditText)rootView.findViewById(R.id.crime_title);
+            mTitleField.addTextChangedListener(new TextWatcher() {
+                public void onTextChanged(CharSequence c, int start, int before, int count) {
+                    mCrime.setTitle(c.toString());
+                }
+
+                public void beforeTextChanged(CharSequence c, int start, int count, int after) {
+                    // this space intentionally left blank
+                }
+
+                public void afterTextChanged(Editable c) {
+                    // this one too
+                }
+            });
+
             return rootView;
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
