@@ -1,7 +1,6 @@
 package com.ilyarudyak.android.hellomoon;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
+import android.widget.Button;
 
 
 public class HelloMoonActivity extends Activity {
@@ -53,6 +52,12 @@ public class HelloMoonActivity extends Activity {
      */
     public static class PlaceholderFragment extends Fragment {
 
+        private Button mPlayButton;
+        private Button mStopButton;
+        private Button mPauseButton;
+
+        private AudioPlayer mPlayer = new AudioPlayer();
+
         public PlaceholderFragment() {
         }
 
@@ -60,7 +65,48 @@ public class HelloMoonActivity extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_hello_moon, container, false);
+
+            mPlayButton = (Button) rootView.findViewById(R.id.hellomoon_playButton);
+            mStopButton = (Button) rootView.findViewById(R.id.hellomoon_stopButton);
+            mPauseButton = (Button) rootView.findViewById(R.id.hellomoon_pauseButton);
+
+            mPlayButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    mPlayer.play(getActivity());
+                    updateButtons();
+//                    mPlayButton.setEnabled(false);
+                }
+            });
+
+            mPauseButton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+//                    mPlayer.pause();
+//                    mPlayButton.setEnabled(true);
+                }
+            });
+
+            mStopButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    mPlayer.stop();
+                    updateButtons();
+//                    mPlayButton.setEnabled(true);
+                }
+            });
+
             return rootView;
+        }
+
+        private void updateButtons() {
+            boolean isEnabled = !mPlayer.isPlaying();
+            mPlayButton.setEnabled(isEnabled);
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            mPlayer.stop();
         }
     }
 }

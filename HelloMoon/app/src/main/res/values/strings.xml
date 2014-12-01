@@ -3,9 +3,14 @@
 
     <string name="app_name">HelloMoon</string>
     <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Settings</string>
+    <string name="action_settings">Settings</string>
+    <string name="hellomoon_image_description">Neil Armstrong stepping
+            onto the moon</string>
+
+    <!--Buttons to play music-->
     <string name="hellomoon_play">Play</string>
     <string name="hellomoon_stop">Stop</string>
-  <string name="hellomoon_image_description">Neil Armstrong stepping
-            onto the moon</string>
+    <string name="hellomoon_pause">Pause</string>
+
+
 </resources>
