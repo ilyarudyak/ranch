@@ -28,8 +28,10 @@ public class CrimeActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crime);
         if (savedInstanceState == null) {
+            UUID crimeId = (UUID)getIntent()
+                    .getSerializableExtra(CrimeFragment.EXTRA_CRIME_ID);
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new CrimeFragment())
+                    .add(R.id.container, CrimeFragment.newInstance(crimeId))
                     .commit();
         }
     }
@@ -70,12 +72,23 @@ public class CrimeActivity extends Activity {
 
         private EditText mTitleField;
 
+        public static CrimeFragment newInstance(UUID crimeId) {
+            Bundle args = new Bundle();
+            args.putSerializable(EXTRA_CRIME_ID, crimeId);
+
+            CrimeFragment fragment = new CrimeFragment();
+            fragment.setArguments(args);
+
+            return fragment;
+        }
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 //            mCrime = new Crime();
-            UUID crimeId = (UUID)getActivity().getIntent()
-                    .getSerializableExtra(EXTRA_CRIME_ID);
+//            UUID crimeId = (UUID)getActivity().getIntent()
+//                    .getSerializableExtra(EXTRA_CRIME_ID);
+            UUID crimeId = (UUID)getArguments().getSerializable(EXTRA_CRIME_ID);
             mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
         }
 
