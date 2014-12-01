@@ -75,6 +75,13 @@ public class CrimeListActivity extends Activity {
         }
 
         @Override
+        public void onResume() {
+            super.onResume();
+            Log.d(TAG, "notify adapter that data changed...");
+            ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
+        }
+
+        @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
             Crime c = (Crime)(getListAdapter()).getItem(position);
             Log.d(TAG, c.getTitle() + " was clicked");
