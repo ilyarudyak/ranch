@@ -2,6 +2,7 @@ package com.ilyarudyak.android.criminalintent;
 
 import android.app.Activity;
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -77,6 +78,11 @@ public class CrimeListActivity extends Activity {
         public void onListItemClick(ListView l, View v, int position, long id) {
             Crime c = (Crime)(getListAdapter()).getItem(position);
             Log.d(TAG, c.getTitle() + " was clicked");
+
+            // start an instance of CrimeActivity
+            Intent i = new Intent(getActivity(), CrimeActivity.class);
+            i.putExtra(CrimeActivity.CrimeFragment.EXTRA_CRIME_ID, c.getId());
+            startActivity(i);
         }
 
 

@@ -16,6 +16,9 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import com.ilyarudyak.android.criminalintent.model.Crime;
+import com.ilyarudyak.android.criminalintent.model.CrimeLab;
+
+import java.util.UUID;
 
 
 public class CrimeActivity extends Activity {
@@ -59,6 +62,8 @@ public class CrimeActivity extends Activity {
      */
     public static class CrimeFragment extends Fragment {
 
+        public static final String EXTRA_CRIME_ID = "criminalintent.CRIME_ID";
+
         private Crime mCrime;
         private Button mDateButton;
         private CheckBox mSolvedCheckBox;
@@ -68,7 +73,10 @@ public class CrimeActivity extends Activity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            mCrime = new Crime();
+//            mCrime = new Crime();
+            UUID crimeId = (UUID)getActivity().getIntent()
+                    .getSerializableExtra(EXTRA_CRIME_ID);
+            mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
         }
 
         public CrimeFragment() {
@@ -80,6 +88,7 @@ public class CrimeActivity extends Activity {
             View rootView = inflater.inflate(R.layout.fragment_crime, container, false);
 
             mTitleField = (EditText)rootView.findViewById(R.id.crime_title);
+            mTitleField.setText(mCrime.getTitle());
             mTitleField.addTextChangedListener(new TextWatcher() {
                 public void onTextChanged(CharSequence c, int start, int before, int count) {
                     mCrime.setTitle(c.toString());
@@ -99,6 +108,7 @@ public class CrimeActivity extends Activity {
             mDateButton.setEnabled(false);
 
             mSolvedCheckBox = (CheckBox)rootView.findViewById(R.id.crime_solved);
+            mSolvedCheckBox.setChecked(mCrime.isSolved());
             mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     // set the crime's solved property

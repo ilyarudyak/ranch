@@ -33,7 +33,9 @@ public class CrimeAdapter extends ArrayAdapter<Crime>  {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService
                     (Context.LAYOUT_INFLATER_SERVICE);
 
-            convertView = inflater.inflate(R.layout.list_item_crime, null);
+            if (null == convertView) {
+                convertView = inflater.inflate(R.layout.list_item_crime, null);
+            }
         }
 
         // configure the view for this Crime
