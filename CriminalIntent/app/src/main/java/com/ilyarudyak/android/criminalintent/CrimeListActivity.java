@@ -96,7 +96,23 @@ public class CrimeListActivity extends Activity {
 
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
-            return super.onOptionsItemSelected(item);
+
+            switch (item.getItemId()) {
+                case R.id.menu_item_new_crime:
+                    startActivityForResult(createNewCrime(), 0);
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
+        }
+
+        private Intent createNewCrime() {
+
+            Crime crime = new Crime();
+            CrimeLab.get(getActivity()).addCrime(crime);
+            Intent i = new Intent(getActivity(), CrimeActivity.class);
+            return i.putExtra(CrimeActivity.CrimeFragment.EXTRA_CRIME_ID,
+                    crime.getId());
         }
     }
 }
