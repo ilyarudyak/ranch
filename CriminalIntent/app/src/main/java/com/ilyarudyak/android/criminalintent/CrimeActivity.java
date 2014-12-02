@@ -152,6 +152,12 @@ public class CrimeActivity extends Activity {
 
             return rootView;
         }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            CrimeLab.get(getActivity()).saveCrimes();
+        }
     }
 }
 
