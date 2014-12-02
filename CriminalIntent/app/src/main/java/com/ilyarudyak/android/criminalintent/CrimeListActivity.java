@@ -62,12 +62,12 @@ public class CrimeListActivity extends Activity {
             setListAdapter(adapter);
         }
 
-        @Override
-        public void onResume() {
-            super.onResume();
-            Log.d(TAG, "notify adapter that data changed...");
-            ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
-        }
+//        @Override
+//        public void onResume() {
+//            super.onResume();
+//            Log.d(TAG, "notify adapter that data changed...");
+//            ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
+//        }
 
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
@@ -77,7 +77,13 @@ public class CrimeListActivity extends Activity {
             // start an instance of CrimeActivity
             Intent i = new Intent(getActivity(), CrimeActivity.class);
             i.putExtra(CrimeActivity.CrimeFragment.EXTRA_CRIME_ID, c.getId());
-            startActivity(i);
+//            startActivity(i);
+            startActivityForResult(i, 0);
+        }
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
         }
 
         // -------------------- menu --------------------
