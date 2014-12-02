@@ -3,7 +3,6 @@
 
     <string name="app_name">CriminalIntent</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
 
     <!-- CrimeFragment -->
     <string name="crime_title_hint">Enter a title for this crime.</string>
@@ -13,6 +12,15 @@
 
     <!--CrimeListFragment-->
     <string name="crimes_title">Crimes</string>
+
+    <!--Menu-->
+    <string name="action_settings">Settings</string>
+
+    <!--Menu CrimeListFragment-->
+    <string name="new_crime">New Crime</string>
+    <string name="show_subtitle">Show Subtitle</string>
+    <string name="hide_subtitle">Hide Subtitle</string>
+    <string name="subtitle">Sometimes tolerance is not a virtue.</string>
 
 
 </resources>
