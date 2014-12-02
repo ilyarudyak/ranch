@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
@@ -31,30 +32,13 @@ public class CrimeListActivity extends Activity {
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_crime_list, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     /**
-     * A placeholder fragment containing a simple view.
+     * A fragment containing a list view of all crimes
+     * using CrimeAdaptor and list of crimes from a singleton CrimeLab.
+     *
+     * We may start detail fragment in onListItemClick() and
+     * we are hearing for changes in list of crimes from
+     * detail fragment in onResume().
      */
     public static class CrimeListFragment extends ListFragment {
 
@@ -68,6 +52,10 @@ public class CrimeListActivity extends Activity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
+            // set options menu
+            setHasOptionsMenu(true);
+
             getActivity().setTitle(R.string.crimes_title);
             mCrimes = CrimeLab.get(getActivity()).getCrimes();
             CrimeAdapter adapter = new CrimeAdapter(getActivity(), mCrimes);
@@ -92,7 +80,18 @@ public class CrimeListActivity extends Activity {
             startActivity(i);
         }
 
+        // -------------------- menu --------------------
 
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            super.onCreateOptionsMenu(menu, inflater);
+            inflater.inflate(R.menu.fragment_crime_list, menu);
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            return super.onOptionsItemSelected(item);
+        }
     }
 }
 
