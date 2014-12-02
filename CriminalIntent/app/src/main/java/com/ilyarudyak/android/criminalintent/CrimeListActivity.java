@@ -5,10 +5,13 @@ import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.ilyarudyak.android.criminalintent.data.CrimeAdapter;
@@ -85,6 +88,26 @@ public class CrimeListActivity extends Activity {
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
             ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
         }
+
+        // ---------- set layout empty crime list --------
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+
+            View rootView = inflater.inflate(R.layout.fragment_list_crime, container, false);
+            Button addCrime = (Button) rootView.findViewById(R.id.add_crime_button);
+            addCrime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivityForResult(createNewCrime(), 0);
+                }
+            });
+
+
+            return rootView;
+        }
+
 
         // -------------------- menu --------------------
 
