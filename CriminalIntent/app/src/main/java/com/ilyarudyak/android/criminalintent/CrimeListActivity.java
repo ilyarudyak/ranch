@@ -89,7 +89,7 @@ public class CrimeListActivity extends Activity {
             ((CrimeAdapter)getListAdapter()).notifyDataSetChanged();
         }
 
-        // ---------- set layout empty crime list --------
+        // ----- set layout for empty crime list ------
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
