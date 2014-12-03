@@ -15,11 +15,13 @@ public class Crime {
     private static final String JSON_TITLE = "title";
     private static final String JSON_DATE = "date";
     private static final String JSON_SOLVED = "solved";
+    private static final String JSON_SUSPECT = "suspect";
 
     private UUID mId;
     private Date mDate;
     private boolean mSolved;
     private String mTitle;
+    private String mSuspect;
 
     public Crime() {
         mId = UUID.randomUUID();
@@ -32,6 +34,8 @@ public class Crime {
         mTitle = json.getString(JSON_TITLE);
         mSolved = json.getBoolean(JSON_SOLVED);
         mDate = new Date(json.getLong(JSON_DATE));
+        if (json.has(JSON_SUSPECT))
+            mSuspect = json.getString(JSON_SUSPECT);
 
     }
 
@@ -66,6 +70,14 @@ public class Crime {
 
     public void setDate(Date date) {
         mDate = date;
+    }
+
+    public String getSuspect() {
+        return mSuspect;
+    }
+
+    public void setSuspect(String mSuspect) {
+        this.mSuspect = mSuspect;
     }
 
     public JSONObject toJSON() throws JSONException {
