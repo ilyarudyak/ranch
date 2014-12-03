@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -87,8 +88,8 @@ public class CrimeActivity extends Activity {
      */
     public static class CrimeFragment extends Fragment {
 
+        public static final String TAG = CrimeFragment.class.getSimpleName();
         public static final String EXTRA_CRIME_ID = "criminalintent.CRIME_ID";
-
         private static final int REQUEST_CONTACT = 2;
 
         private Crime mCrime;
@@ -96,6 +97,7 @@ public class CrimeActivity extends Activity {
         private CheckBox mSolvedCheckBox;
         private EditText mTitleField;
         private Button mSuspectButton;
+        private Button mCallSuspect;
         private Button mReportButton;
 
         public static CrimeFragment newInstance(UUID crimeId) {
@@ -168,6 +170,20 @@ public class CrimeActivity extends Activity {
                 mSuspectButton.setText(mCrime.getSuspect());
             }
 
+            mCallSuspect = (Button) rootView.findViewById(R.id.crime_callButton);
+            mCallSuspect.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    if (mCrime.getSuspectPhone() != null) {
+                        Uri number = Uri.parse("tel:" + mCrime.getSuspectPhone());
+                        Intent i = new Intent(Intent.ACTION_DIAL);
+                        i.setData(number);
+                        startActivity(i);
+                    }
+                }
+            });
+
             mReportButton = (Button) rootView.findViewById(R.id.crime_reportButton);
             mReportButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -196,7 +212,8 @@ public class CrimeActivity extends Activity {
 
             if (requestCode == REQUEST_CONTACT) {
                 Uri contactUri = data.getData();
-                String[] queryFields = new String[]{ContactsContract.Contacts.DISPLAY_NAME_PRIMARY};
+                String[] queryFields = new String[]{ContactsContract.Contacts._ID,
+                        ContactsContract.Contacts.DISPLAY_NAME_PRIMARY};
                 Cursor c = getActivity().getContentResolver()
                         .query(contactUri, queryFields, null, null, null);
 
@@ -206,11 +223,58 @@ public class CrimeActivity extends Activity {
                 }
 
                 c.moveToFirst();
-                String suspect = c.getString(0);
+                String suspect = c.getString(c.getColumnIndex(ContactsContract
+                        .Contacts.DISPLAY_NAME_PRIMARY));
                 mCrime.setSuspect(suspect);
                 mSuspectButton.setText(suspect);
+
+                // get suspect phone number
+                String suspectId =
+                        c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
+                Log.d(TAG, "suspect id = " + suspectId);
+                mCallSuspect.setText(getSuspectPhone(suspectId));
+
                 c.close();
             }
+        }
+
+        private String getSuspectPhone(String suspectId) {
+
+            Cursor phones = getActivity().getContentResolver().query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " +
+                    suspectId, null, null);
+
+            try {
+                while (phones.moveToNext()) {
+                    String number = phones.getString(phones.getColumnIndex(
+                            ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    Log.d(TAG, "phone number: " + number);
+                    mCrime.setSuspectPhone(number);
+                    return number;
+//                int type = phones.getInt(phones.getColumnIndex(
+//                        ContactsContract.CommonDataKinds.Phone.TYPE));
+//                switch (type) {
+//                    case ContactsContract.CommonDataKinds.Phone.TYPE_HOME:
+//                        // do something with the Home number here...
+//                        Log.d(TAG, "home number: " + number);
+//                        break;
+//                    case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
+//                        // do something with the Mobile number here...
+//                        Log.d(TAG, "home number: " + number);
+//                        break;
+//                    case ContactsContract.CommonDataKinds.Phone.TYPE_WORK:
+//                        // do something with the Work number here...
+//                        Log.d(TAG, "home number: " + number);
+//                        break;
+//                }
+                }
+            } finally {
+                if (phones != null)
+                    phones.close();
+            }
+
+            return "no phone found";
         }
 
         // -------------------- crime report ----------------------
