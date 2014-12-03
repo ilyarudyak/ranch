@@ -80,6 +80,11 @@ public class CrimeLab {
         }
 
     }
+
+    public void deleteCrime(Crime c) {
+        mCrimes.remove(c);
+        saveCrimes();
+    }
 }
 
 
