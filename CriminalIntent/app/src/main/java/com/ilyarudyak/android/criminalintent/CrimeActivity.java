@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -57,9 +60,6 @@ public class CrimeActivity extends Activity {
         }
     }
 
-
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -89,10 +89,13 @@ public class CrimeActivity extends Activity {
 
         public static final String EXTRA_CRIME_ID = "criminalintent.CRIME_ID";
 
+        private static final int REQUEST_CONTACT = 2;
+
         private Crime mCrime;
         private Button mDateButton;
         private CheckBox mSolvedCheckBox;
         private EditText mTitleField;
+        private Button mSuspectButton;
         private Button mReportButton;
 
         public static CrimeFragment newInstance(UUID crimeId) {
@@ -152,7 +155,20 @@ public class CrimeActivity extends Activity {
                 }
             });
 
-            mReportButton = (Button)rootView.findViewById(R.id.crime_reportButton);
+            mSuspectButton = (Button) rootView.findViewById(R.id.crime_suspectButton);
+            mSuspectButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(Intent.ACTION_PICK,
+                            ContactsContract.Contacts.CONTENT_URI);
+                    startActivityForResult(i, REQUEST_CONTACT);
+                }
+            });
+            if (mCrime.getSuspect() != null) {
+                mSuspectButton.setText(mCrime.getSuspect());
+            }
+
+            mReportButton = (Button) rootView.findViewById(R.id.crime_reportButton);
             mReportButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -164,6 +180,7 @@ public class CrimeActivity extends Activity {
                 }
             });
 
+
             return rootView;
         }
 
@@ -171,6 +188,29 @@ public class CrimeActivity extends Activity {
         public void onPause() {
             super.onPause();
             CrimeLab.get(getActivity()).saveCrimes();
+        }
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            if (resultCode != Activity.RESULT_OK) return;
+
+            if (requestCode == REQUEST_CONTACT) {
+                Uri contactUri = data.getData();
+                String[] queryFields = new String[]{ContactsContract.Contacts.DISPLAY_NAME_PRIMARY};
+                Cursor c = getActivity().getContentResolver()
+                        .query(contactUri, queryFields, null, null, null);
+
+                if (c.getCount() == 0) {
+                    c.close();
+                    return;
+                }
+
+                c.moveToFirst();
+                String suspect = c.getString(0);
+                mCrime.setSuspect(suspect);
+                mSuspectButton.setText(suspect);
+                c.close();
+            }
         }
 
         // -------------------- crime report ----------------------
