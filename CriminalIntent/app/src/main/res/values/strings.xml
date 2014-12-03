@@ -42,5 +42,8 @@ The crime was discovered on %2$s. %3$s, and %4$s
     <!--Menu CrimeListFragment-->
     <string name="new_crime">New Crime</string>
 
+    <!--Context menu-->
+    <string name="delete_crime">Delete Crime</string>
+
 
 </resources>
