@@ -13,15 +13,24 @@
     <string name="crime_report_text">Send Crime Report</string>
 
     <!--Crime report-->
+    <!--Subject-->
+    <string name="crime_report_subject">CriminalIntent Crime Report</string>
+
+    <!--text of the report 1-title 2-solved or not 3-date 4-suspect  -->
     <string name="crime_report">%1$s!
 The crime was discovered on %2$s. %3$s, and %4$s
   </string>
+    <!--2-solved or not-->
     <string name="crime_report_solved">The case is solved</string>
     <string name="crime_report_unsolved">The case is not solved</string>
+    <!--4-suspect-->
     <string name="crime_report_no_suspect">There is no suspect.</string>
     <string name="crime_report_suspect">The suspect is %s.</string>
-    <string name="crime_report_subject">CriminalIntent Crime Report</string>
+
+    <!--???-->
     <string name="send_report">Send crime report via</string>
+    <!-- end of crime report -->
+
 
     <!--CrimeListFragment-->
     <string name="crimes_title">Crimes</string>

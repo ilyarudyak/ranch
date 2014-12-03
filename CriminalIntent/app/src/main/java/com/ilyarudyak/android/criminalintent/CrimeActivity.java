@@ -3,6 +3,7 @@ package com.ilyarudyak.android.criminalintent;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
@@ -91,8 +92,8 @@ public class CrimeActivity extends Activity {
         private Crime mCrime;
         private Button mDateButton;
         private CheckBox mSolvedCheckBox;
-
         private EditText mTitleField;
+        private Button mReportButton;
 
         public static CrimeFragment newInstance(UUID crimeId) {
             Bundle args = new Bundle();
@@ -148,6 +149,18 @@ public class CrimeActivity extends Activity {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     // set the crime's solved property
                     mCrime.setSolved(isChecked);
+                }
+            });
+
+            mReportButton = (Button)rootView.findViewById(R.id.crime_reportButton);
+            mReportButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(Intent.ACTION_SEND);
+                    i.setType("text/plain");
+                    i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject));
+                    i.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
+                    startActivity(i);
                 }
             });
 
