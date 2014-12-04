@@ -71,9 +71,6 @@ public class CrimeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//            mCrime = new Crime();
-//            UUID crimeId = (UUID)getActivity().getIntent()
-//                    .getSerializableExtra(EXTRA_CRIME_ID);
         UUID crimeId = (UUID)getArguments().getSerializable(EXTRA_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
     }
@@ -135,15 +132,12 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-//                    DatePickerFragment.newInstance(mCrime.getId())
-//                            .show(getFragmentManager(), "datePicker");
                 DatePickerFragment dialog = new DatePickerFragment();
                 dialog.show(getFragmentManager(), "datePicker");
                 dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
             }
         });
         mDateButton.setText(mCrime.getDate().toString());
-//            mDateButton.setEnabled(false);
 
         mSolvedCheckBox = (CheckBox)rootView.findViewById(R.id.crime_solved);
         mSolvedCheckBox.setChecked(mCrime.isSolved());
@@ -269,30 +263,11 @@ public class CrimeFragment extends Fragment {
                         ContactsContract.CommonDataKinds.Phone.NUMBER));
                 Log.d(TAG, "phone number: " + number);
                 mCrime.setSuspectPhone(number);
-//                    return number;
-//                int type = phones.getInt(phones.getColumnIndex(
-//                        ContactsContract.CommonDataKinds.Phone.TYPE));
-//                switch (type) {
-//                    case ContactsContract.CommonDataKinds.Phone.TYPE_HOME:
-//                        // do something with the Home number here...
-//                        Log.d(TAG, "home number: " + number);
-//                        break;
-//                    case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
-//                        // do something with the Mobile number here...
-//                        Log.d(TAG, "home number: " + number);
-//                        break;
-//                    case ContactsContract.CommonDataKinds.Phone.TYPE_WORK:
-//                        // do something with the Work number here...
-//                        Log.d(TAG, "home number: " + number);
-//                        break;
-//                }
             }
         } finally {
             if (phones != null)
                 phones.close();
         }
-
-//            return getString(R.string.crime_no_phone_found);
     }
 
     // -------------------- crime report ----------------------
