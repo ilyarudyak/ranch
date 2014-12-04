@@ -1,16 +1,15 @@
 package com.ilyarudyak.android.criminalintent;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,17 +23,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
+import com.ilyarudyak.android.criminalintent.data.DatePickerFragment;
 import com.ilyarudyak.android.criminalintent.model.Crime;
 import com.ilyarudyak.android.criminalintent.model.CrimeLab;
 import com.ilyarudyak.android.criminalintent.ui.CrimePagerAdapter;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.UUID;
 
 
@@ -98,15 +98,23 @@ public class CrimeActivity extends Activity {
         public static final String TAG = CrimeFragment.class.getSimpleName();
         public static final String EXTRA_CRIME_ID = "criminalintent.CRIME_ID";
         private static final int REQUEST_DATE = 0;
+        private static final int REQUEST_PHOTO = 1;
         private static final int REQUEST_CONTACT = 2;
 
-
         private Crime mCrime;
+
+        // title of crime
+        private EditText mTitleField;
+        // image view and button to take photo
+        private ImageButton mPhotoButton;
+        private ImageView mPhotoView;
+        // date and status
         private Button mDateButton;
         private CheckBox mSolvedCheckBox;
-        private EditText mTitleField;
+        // suspect buttons
         private Button mSuspectButton;
         private Button mCallSuspect;
+        // report button
         private Button mReportButton;
 
         public static CrimeFragment newInstance(UUID crimeId) {
@@ -137,6 +145,8 @@ public class CrimeActivity extends Activity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_crime, container, false);
 
+            // --------------- title of the crime -----------------------------
+
             mTitleField = (EditText)rootView.findViewById(R.id.crime_title);
             mTitleField.setText(mCrime.getTitle());
             mTitleField.addTextChangedListener(new TextWatcher() {
@@ -152,6 +162,32 @@ public class CrimeActivity extends Activity {
                     // this one too
                 }
             });
+
+            // --------------- image and button to take photo -----------------
+
+            mPhotoButton = (ImageButton) rootView.findViewById(R.id.crime_imageButton);
+            mPhotoButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    // create Intent to take a picture with build-in camera
+                    Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                    // Create a random filename
+                    String filename = UUID.randomUUID().toString() + ".jpg";
+
+                    // create file path in external storage
+                    File dir = Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_PICTURES);
+                    File outputFile = new File(dir, "CameraContentDemo.jpeg");
+                    i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));
+
+                    // start activity
+                    startActivityForResult(i, REQUEST_PHOTO);
+                }
+            });
+
+            // --------------- date and status buttons ------------------------
 
             mDateButton = (Button)rootView.findViewById(R.id.crime_date);
             mDateButton.setOnClickListener(new View.OnClickListener() {
@@ -177,7 +213,7 @@ public class CrimeActivity extends Activity {
                 }
             });
 
-            // --------------- group of three action buttons ----------------
+            // --------------- group of suspect buttons -----------------------
 
             mSuspectButton = (Button) rootView.findViewById(R.id.crime_suspectButton);
             mSuspectButton.setOnClickListener(new View.OnClickListener() {
@@ -207,6 +243,8 @@ public class CrimeActivity extends Activity {
             });
             setCallSuspect();
 
+            // --------------- report button ---------------------------------
+
             mReportButton = (Button) rootView.findViewById(R.id.crime_reportButton);
             mReportButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -223,6 +261,8 @@ public class CrimeActivity extends Activity {
             return rootView;
         }
 
+        // we save our singleton to json file as often as we can
+        // we use onPause() to guarantee that object is alive
         @Override
         public void onPause() {
             super.onPause();
@@ -267,6 +307,8 @@ public class CrimeActivity extends Activity {
                 c.close();
             }
         }
+
+        // --------------------- some helper methods --------------------------
 
         private void setCallSuspect() {
             if (mCrime.getSuspectPhone() != null)
@@ -337,64 +379,64 @@ public class CrimeActivity extends Activity {
 
     // -------------------- date picker ----------------------
 
-    public static class DatePickerFragment extends DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
-
-        private static final String TAG =
-                DatePickerFragment.class.getSimpleName();
-//        public static final String CRIME_ID =
-//                "criminalintent.CRIME_ID";
-        public static final String EXTRA_DATE =
-                "criminalintent.EXTRA_DATE";
-
-        private UUID crimeId;
-        private Date mDate;
-
-
-//        public static DatePickerFragment newInstance(UUID crimeID) {
-//            Bundle args = new Bundle();
-//            args.putSerializable(CRIME_ID, crimeID);
+//    public static class DatePickerFragment extends DialogFragment
+//            implements DatePickerDialog.OnDateSetListener {
 //
-//            DatePickerFragment fragment = new DatePickerFragment();
-//            fragment.setArguments(args);
+//        private static final String TAG =
+//                DatePickerFragment.class.getSimpleName();
+////        public static final String CRIME_ID =
+////                "criminalintent.CRIME_ID";
+//        public static final String EXTRA_DATE =
+//                "criminalintent.EXTRA_DATE";
 //
-//            return fragment;
+//        private UUID crimeId;
+//        private Date mDate;
+//
+//
+////        public static DatePickerFragment newInstance(UUID crimeID) {
+////            Bundle args = new Bundle();
+////            args.putSerializable(CRIME_ID, crimeID);
+////
+////            DatePickerFragment fragment = new DatePickerFragment();
+////            fragment.setArguments(args);
+////
+////            return fragment;
+////        }
+//
+//        @Override
+//        public Dialog onCreateDialog(Bundle savedInstanceState) {
+//            // Use the current date as the default date in the picker
+//            final Calendar c = Calendar.getInstance();
+//            int year = c.get(Calendar.YEAR);
+//            int month = c.get(Calendar.MONTH);
+//            int day = c.get(Calendar.DAY_OF_MONTH);
+//
+////            crimeId = (UUID) getArguments().getSerializable(CRIME_ID);
+//
+//            // Create a new instance of DatePickerDialog and return it
+//            return new DatePickerDialog(getActivity(), this, year, month, day);
 //        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-//            crimeId = (UUID) getArguments().getSerializable(CRIME_ID);
-
-            // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), this, year, month, day);
-        }
-
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            // Do something with the date chosen by the user
-            Log.d(TAG, month + "/" + day + "/" + year);
-
-            mDate = new GregorianCalendar(year, month, day).getTime();
-            sendResult(Activity.RESULT_OK);
-
-//            Crime crime = CrimeLab.get(getActivity()).getCrime(crimeId);
-//            crime.setDate(date);
-        }
-
-        private void sendResult(int resultCode) {
-            if (getTargetFragment() == null)
-                return;
-            Intent i = new Intent();
-            i.putExtra(EXTRA_DATE, mDate);
-            getTargetFragment()
-                    .onActivityResult(getTargetRequestCode(), resultCode, i);
-        }
-    }
+//
+//        public void onDateSet(DatePicker view, int year, int month, int day) {
+//            // Do something with the date chosen by the user
+//            Log.d(TAG, month + "/" + day + "/" + year);
+//
+//            mDate = new GregorianCalendar(year, month, day).getTime();
+//            sendResult(Activity.RESULT_OK);
+//
+////            Crime crime = CrimeLab.get(getActivity()).getCrime(crimeId);
+////            crime.setDate(date);
+//        }
+//
+//        private void sendResult(int resultCode) {
+//            if (getTargetFragment() == null)
+//                return;
+//            Intent i = new Intent();
+//            i.putExtra(EXTRA_DATE, mDate);
+//            getTargetFragment()
+//                    .onActivityResult(getTargetRequestCode(), resultCode, i);
+//        }
+//    }
 }
 
 
