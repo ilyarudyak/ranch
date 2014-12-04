@@ -12,22 +12,28 @@
     <LinearLayout
         android:id="@android:id/empty"
         android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_gravity="left|bottom">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="no crimes here"
-            android:layout_gravity="center"/>
+            android:text="@string/crimes_empty_placeholder"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="add Crime"
             android:id="@+id/add_crime_button"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:layout_marginLeft="48dp"
+            android:layout_marginRight="48dp"/>
 
     </LinearLayout>
 

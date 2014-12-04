@@ -18,9 +18,7 @@
     <string name="crime_report_subject">CriminalIntent Crime Report</string>
 
     <!--text of the report 1-title 2-solved or not 3-date 4-suspect  -->
-    <string name="crime_report">%1$s!
-The crime was discovered on %2$s. %3$s, and %4$s
-  </string>
+    <string name="crime_report">%1$s! The crime was discovered on %2$s. %3$s, and %4$s</string>
     <!--2-solved or not-->
     <string name="crime_report_solved">The case is solved</string>
     <string name="crime_report_unsolved">The case is not solved</string>
@@ -35,6 +33,8 @@ The crime was discovered on %2$s. %3$s, and %4$s
 
     <!--CrimeListFragment-->
     <string name="crimes_title">Crimes</string>
+    <string name="crimes_empty_placeholder">There are no Crimes. Add them.</string>
+
 
     <!--Menu-->
     <string name="action_settings">Settings</string>
