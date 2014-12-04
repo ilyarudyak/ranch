@@ -1,6 +1,9 @@
 package com.ilyarudyak.android.criminalintent;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -21,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 
 import com.ilyarudyak.android.criminalintent.model.Crime;
@@ -28,6 +32,9 @@ import com.ilyarudyak.android.criminalintent.model.CrimeLab;
 import com.ilyarudyak.android.criminalintent.ui.CrimePagerAdapter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.UUID;
 
 
@@ -90,7 +97,9 @@ public class CrimeActivity extends Activity {
 
         public static final String TAG = CrimeFragment.class.getSimpleName();
         public static final String EXTRA_CRIME_ID = "criminalintent.CRIME_ID";
+        private static final int REQUEST_DATE = 0;
         private static final int REQUEST_CONTACT = 2;
+
 
         private Crime mCrime;
         private Button mDateButton;
@@ -145,8 +154,19 @@ public class CrimeActivity extends Activity {
             });
 
             mDateButton = (Button)rootView.findViewById(R.id.crime_date);
+            mDateButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+//                    DatePickerFragment.newInstance(mCrime.getId())
+//                            .show(getFragmentManager(), "datePicker");
+                    DatePickerFragment dialog = new DatePickerFragment();
+                    dialog.show(getFragmentManager(), "datePicker");
+                    dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
+                }
+            });
             mDateButton.setText(mCrime.getDate().toString());
-            mDateButton.setEnabled(false);
+//            mDateButton.setEnabled(false);
 
             mSolvedCheckBox = (CheckBox)rootView.findViewById(R.id.crime_solved);
             mSolvedCheckBox.setChecked(mCrime.isSolved());
@@ -213,7 +233,13 @@ public class CrimeActivity extends Activity {
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
             if (resultCode != Activity.RESULT_OK) return;
 
-            if (requestCode == REQUEST_CONTACT) {
+            if (requestCode == REQUEST_DATE) {
+                Date date = (Date)data
+                        .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+                mCrime.setDate(date);
+                mDateButton.setText(mCrime.getDate().toString());
+            }
+            else if (requestCode == REQUEST_CONTACT) {
                 Uri contactUri = data.getData();
                 String[] queryFields = new String[]{ContactsContract.Contacts._ID,
                         ContactsContract.Contacts.DISPLAY_NAME_PRIMARY};
@@ -286,7 +312,7 @@ public class CrimeActivity extends Activity {
 //            return getString(R.string.crime_no_phone_found);
         }
 
-        // -------------------- crime report ----------------------
+    // -------------------- crime report ----------------------
 
         private String getCrimeReport() {
             String solvedString;
@@ -306,6 +332,67 @@ public class CrimeActivity extends Activity {
 
             return getString(R.string.crime_report, mCrime.getTitle(),
                     dateString, solvedString, suspect);
+        }
+    }
+
+    // -------------------- date picker ----------------------
+
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        private static final String TAG =
+                DatePickerFragment.class.getSimpleName();
+//        public static final String CRIME_ID =
+//                "criminalintent.CRIME_ID";
+        public static final String EXTRA_DATE =
+                "criminalintent.EXTRA_DATE";
+
+        private UUID crimeId;
+        private Date mDate;
+
+
+//        public static DatePickerFragment newInstance(UUID crimeID) {
+//            Bundle args = new Bundle();
+//            args.putSerializable(CRIME_ID, crimeID);
+//
+//            DatePickerFragment fragment = new DatePickerFragment();
+//            fragment.setArguments(args);
+//
+//            return fragment;
+//        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+//            crimeId = (UUID) getArguments().getSerializable(CRIME_ID);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            // Do something with the date chosen by the user
+            Log.d(TAG, month + "/" + day + "/" + year);
+
+            mDate = new GregorianCalendar(year, month, day).getTime();
+            sendResult(Activity.RESULT_OK);
+
+//            Crime crime = CrimeLab.get(getActivity()).getCrime(crimeId);
+//            crime.setDate(date);
+        }
+
+        private void sendResult(int resultCode) {
+            if (getTargetFragment() == null)
+                return;
+            Intent i = new Intent();
+            i.putExtra(EXTRA_DATE, mDate);
+            getTargetFragment()
+                    .onActivityResult(getTargetRequestCode(), resultCode, i);
         }
     }
 }
