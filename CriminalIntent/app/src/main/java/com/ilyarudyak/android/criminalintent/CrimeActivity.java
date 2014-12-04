@@ -157,6 +157,8 @@ public class CrimeActivity extends Activity {
                 }
             });
 
+            // --------------- group of three action buttons ----------------
+
             mSuspectButton = (Button) rootView.findViewById(R.id.crime_suspectButton);
             mSuspectButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -183,6 +185,7 @@ public class CrimeActivity extends Activity {
                     }
                 }
             });
+            setCallSuspect();
 
             mReportButton = (Button) rootView.findViewById(R.id.crime_reportButton);
             mReportButton.setOnClickListener(new View.OnClickListener() {
@@ -232,13 +235,19 @@ public class CrimeActivity extends Activity {
                 String suspectId =
                         c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
                 Log.d(TAG, "suspect id = " + suspectId);
-                mCallSuspect.setText(getSuspectPhone(suspectId));
+                getSuspectPhone(suspectId);
+                setCallSuspect();
 
                 c.close();
             }
         }
 
-        private String getSuspectPhone(String suspectId) {
+        private void setCallSuspect() {
+            if (mCrime.getSuspectPhone() != null)
+                mCallSuspect.setText(mCrime.getSuspectPhone());
+        }
+
+        private void getSuspectPhone(String suspectId) {
 
             Cursor phones = getActivity().getContentResolver().query(
                     ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
@@ -251,7 +260,7 @@ public class CrimeActivity extends Activity {
                             ContactsContract.CommonDataKinds.Phone.NUMBER));
                     Log.d(TAG, "phone number: " + number);
                     mCrime.setSuspectPhone(number);
-                    return number;
+//                    return number;
 //                int type = phones.getInt(phones.getColumnIndex(
 //                        ContactsContract.CommonDataKinds.Phone.TYPE));
 //                switch (type) {
@@ -274,18 +283,15 @@ public class CrimeActivity extends Activity {
                     phones.close();
             }
 
-            return "no phone found";
+//            return getString(R.string.crime_no_phone_found);
         }
 
         // -------------------- crime report ----------------------
 
         private String getCrimeReport() {
-            String solvedString = null;
-            if (mCrime.isSolved()) {
-                solvedString = getString(R.string.crime_report_solved);
-            } else {
-                solvedString = getString(R.string.crime_report_unsolved);
-            }
+            String solvedString;
+            if (mCrime.isSolved()) solvedString = getString(R.string.crime_report_solved);
+            else solvedString = getString(R.string.crime_report_unsolved);
 
             String dateFormat = "EEE, MMM dd";
             String dateString = DateFormat.format(dateFormat,
@@ -298,10 +304,8 @@ public class CrimeActivity extends Activity {
                 suspect = getString(R.string.crime_report_suspect, suspect);
             }
 
-            String report = getString(R.string.crime_report, mCrime.getTitle(),
+            return getString(R.string.crime_report, mCrime.getTitle(),
                     dateString, solvedString, suspect);
-
-            return report;
         }
     }
 }

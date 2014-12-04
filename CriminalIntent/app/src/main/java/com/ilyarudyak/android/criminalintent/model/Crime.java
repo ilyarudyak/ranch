@@ -99,7 +99,7 @@ public class Crime {
         json.put(JSON_DATE, mDate.getTime());
         json.put(JSON_SOLVED, mSolved);
         json.put(JSON_SUSPECT, mSuspect);
-        json.put(JSON_SUSPECT, mSuspectPhone);
+        json.put(JSON_SUSPECT_PHONE, mSuspectPhone);
         return json;
     }
 }
