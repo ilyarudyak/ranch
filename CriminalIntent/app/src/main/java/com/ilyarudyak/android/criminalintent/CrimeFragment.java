@@ -112,12 +112,14 @@ public class CrimeFragment extends Fragment {
                 Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                 // Create a random filename
-                String filename = UUID.randomUUID().toString() + ".jpg";
+                String filename = UUID.randomUUID().toString() + ".jpeg";
+                Log.d(TAG, filename);
 
                 // create file path in external storage
                 File dir = Environment.getExternalStoragePublicDirectory(
                         Environment.DIRECTORY_PICTURES);
-                File outputFile = new File(dir, "CameraContentDemo.jpeg");
+                File outputFile = new File(dir, filename);
+                Log.d(TAG, outputFile.toString());
                 i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));
 
                 // start activity
@@ -213,8 +215,11 @@ public class CrimeFragment extends Fragment {
                     .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
             mDateButton.setText(mCrime.getDate().toString());
-        }
-        else if (requestCode == REQUEST_CONTACT) {
+        } else if (requestCode == REQUEST_PHOTO) {
+
+                Log.i(TAG, "intent received ..." + data.toString());
+
+        } else if (requestCode == REQUEST_CONTACT) {
             Uri contactUri = data.getData();
             String[] queryFields = new String[]{ContactsContract.Contacts._ID,
                     ContactsContract.Contacts.DISPLAY_NAME_PRIMARY};
@@ -236,7 +241,7 @@ public class CrimeFragment extends Fragment {
             String suspectId =
                     c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
             Log.d(TAG, "suspect id = " + suspectId);
-            getSuspectPhone(suspectId);
+            fetchSuspectPhone(suspectId);
             setCallSuspect();
 
             c.close();
@@ -250,7 +255,7 @@ public class CrimeFragment extends Fragment {
             mCallSuspect.setText(mCrime.getSuspectPhone());
     }
 
-    private void getSuspectPhone(String suspectId) {
+    private void fetchSuspectPhone(String suspectId) {
 
         Cursor phones = getActivity().getContentResolver().query(
                 ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
@@ -268,6 +273,7 @@ public class CrimeFragment extends Fragment {
             if (phones != null)
                 phones.close();
         }
+
     }
 
     // -------------------- crime report ----------------------

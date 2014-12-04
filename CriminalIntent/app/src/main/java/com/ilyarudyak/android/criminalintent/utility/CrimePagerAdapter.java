@@ -1,4 +1,4 @@
-package com.ilyarudyak.android.criminalintent.ui;
+package com.ilyarudyak.android.criminalintent.utility;
 
 
 import android.app.Fragment;

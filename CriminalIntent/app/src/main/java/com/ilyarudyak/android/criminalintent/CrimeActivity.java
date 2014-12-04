@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 import com.ilyarudyak.android.criminalintent.model.Crime;
 import com.ilyarudyak.android.criminalintent.model.CrimeLab;
-import com.ilyarudyak.android.criminalintent.ui.CrimePagerAdapter;
+import com.ilyarudyak.android.criminalintent.utility.CrimePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.UUID;
