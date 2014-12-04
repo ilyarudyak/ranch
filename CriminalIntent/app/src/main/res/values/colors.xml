@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--source http://www.google.com/design/spec/style/color.html#color-color-palette-->
+<resources>
+    <item name="teal_500" type="color">#009688</item>
+</resources>
