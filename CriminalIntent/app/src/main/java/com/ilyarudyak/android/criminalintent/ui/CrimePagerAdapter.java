@@ -5,7 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
-import com.ilyarudyak.android.criminalintent.CrimeActivity;
+import com.ilyarudyak.android.criminalintent.CrimeFragment;
 import com.ilyarudyak.android.criminalintent.model.Crime;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class CrimePagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         UUID crimeId =  mCrimes.get(position).getId();
-        return CrimeActivity.CrimeFragment.newInstance(crimeId);
+        return CrimeFragment.newInstance(crimeId);
     }
 
     @Override
