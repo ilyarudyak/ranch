@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,6 +27,8 @@ import android.widget.ImageView;
 import com.ilyarudyak.android.criminalintent.data.DatePickerFragment;
 import com.ilyarudyak.android.criminalintent.model.Crime;
 import com.ilyarudyak.android.criminalintent.model.CrimeLab;
+import com.ilyarudyak.android.criminalintent.model.Photo;
+import com.ilyarudyak.android.criminalintent.utility.PictureUtils;
 
 import java.io.File;
 import java.util.Date;
@@ -43,6 +46,7 @@ public class CrimeFragment extends Fragment {
     private static final int REQUEST_CONTACT = 2;
 
     private Crime mCrime;
+    private String mFilename;
 
     // title of crime
     private EditText mTitleField;
@@ -112,20 +116,26 @@ public class CrimeFragment extends Fragment {
                 Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                 // Create a random filename
-                String filename = UUID.randomUUID().toString() + ".jpeg";
-                Log.d(TAG, filename);
+//                String filename = UUID.randomUUID().toString() + ".jpeg";
+//                Log.d(TAG, filename);
 
                 // create file path in external storage
                 File dir = Environment.getExternalStoragePublicDirectory(
                         Environment.DIRECTORY_PICTURES);
-                File outputFile = new File(dir, filename);
-                Log.d(TAG, outputFile.toString());
+
+                File outputFile = new File(dir, PictureUtils.generateFileName());
+                mFilename = outputFile.toString();
+                Log.d(TAG, mFilename);
+
                 i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));
 
                 // start activity
                 startActivityForResult(i, REQUEST_PHOTO);
             }
         });
+
+        mPhotoView = (ImageView) rootView.findViewById(R.id.crime_imageView);
+
 
         // --------------- date and status buttons ------------------------
 
@@ -198,6 +208,12 @@ public class CrimeFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        showPhoto();
+    }
+
     // we save our singleton to json file as often as we can
     // we use onPause() to guarantee that object is alive
     @Override
@@ -217,7 +233,10 @@ public class CrimeFragment extends Fragment {
             mDateButton.setText(mCrime.getDate().toString());
         } else if (requestCode == REQUEST_PHOTO) {
 
-                Log.i(TAG, "intent received ..." + data.toString());
+            Log.d(TAG, "intent received ...");
+            Photo p = new Photo(mFilename);
+            mCrime.setPhoto(p);
+            showPhoto();
 
         } else if (requestCode == REQUEST_CONTACT) {
             Uri contactUri = data.getData();
@@ -276,7 +295,16 @@ public class CrimeFragment extends Fragment {
 
     }
 
-    // -------------------- crime report ----------------------
+    private void showPhoto() {
+        // (re)set the image button's image based on our photo
+        Photo p = mCrime.getPhoto();
+        BitmapDrawable b = null;
+        if (p != null) {
+            String path = p.getFilename();
+            b = PictureUtils.getScaledDrawable(getActivity(), path);
+        }
+        mPhotoView.setImageDrawable(b);
+    }
 
     private String getCrimeReport() {
         String solvedString;
