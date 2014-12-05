@@ -135,6 +135,12 @@ public class CrimeFragment extends Fragment {
         });
 
         mPhotoView = (ImageView) rootView.findViewById(R.id.crime_imageView);
+        mPhotoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPhotoInStandardApp();
+            }
+        });
 
 
         // --------------- date and status buttons ------------------------
@@ -211,7 +217,7 @@ public class CrimeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        showPhoto();
+        showPhotoInFragment();
     }
 
     // we save our singleton to json file as often as we can
@@ -236,7 +242,7 @@ public class CrimeFragment extends Fragment {
             Log.d(TAG, "intent received ...");
             Photo p = new Photo(mFilename);
             mCrime.setPhoto(p);
-            showPhoto();
+            showPhotoInFragment();
 
         } else if (requestCode == REQUEST_CONTACT) {
             Uri contactUri = data.getData();
@@ -295,7 +301,7 @@ public class CrimeFragment extends Fragment {
 
     }
 
-    private void showPhoto() {
+    private void showPhotoInFragment() {
         // (re)set the image button's image based on our photo
         Photo p = mCrime.getPhoto();
         BitmapDrawable b = null;
@@ -304,6 +310,12 @@ public class CrimeFragment extends Fragment {
             b = PictureUtils.getScaledDrawable(getActivity(), path);
         }
         mPhotoView.setImageDrawable(b);
+    }
+
+    private void showPhotoInStandardApp() {
+        Intent i=new Intent(Intent.ACTION_VIEW);
+        i.setDataAndType(Uri.parse(mCrime.getPhoto().getFilename()), "image/jpeg");
+        startActivity(i);
     }
 
     private String getCrimeReport() {
