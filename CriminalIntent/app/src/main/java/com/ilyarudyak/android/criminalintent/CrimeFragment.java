@@ -220,6 +220,12 @@ public class CrimeFragment extends Fragment {
         showPhotoInFragment();
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        PictureUtils.cleanImageView(mPhotoView);
+    }
+
     // we save our singleton to json file as often as we can
     // we use onPause() to guarantee that object is alive
     @Override
