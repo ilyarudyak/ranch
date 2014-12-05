@@ -82,7 +82,7 @@ public class CrimeListActivity extends Activity {
 
             // start an instance of CrimeActivity
             Intent i = new Intent(getActivity(), CrimeActivity.class);
-            i.putExtra(CrimeActivity.CrimeFragment.EXTRA_CRIME_ID, c.getId());
+            i.putExtra(CrimeFragment.EXTRA_CRIME_ID, c.getId());
 //            startActivity(i);
             startActivityForResult(i, 0);
         }
@@ -190,7 +190,7 @@ public class CrimeListActivity extends Activity {
             Crime crime = new Crime();
             CrimeLab.get(getActivity()).addCrime(crime);
             Intent i = new Intent(getActivity(), CrimeActivity.class);
-            return i.putExtra(CrimeActivity.CrimeFragment.EXTRA_CRIME_ID,
+            return i.putExtra(CrimeFragment.EXTRA_CRIME_ID,
                     crime.getId());
         }
     }
