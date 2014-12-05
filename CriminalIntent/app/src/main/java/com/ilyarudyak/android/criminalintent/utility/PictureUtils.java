@@ -7,6 +7,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.view.Display;
 import android.widget.ImageView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by ilyarudyak on 05/12/14.
  */
@@ -54,4 +57,22 @@ public class PictureUtils {
         b.getBitmap().recycle();
         imageView.setImageDrawable(null);
     }
+
+    public static String generateFileName() {
+        return new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".jpg";
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
