@@ -170,7 +170,7 @@ public class CrimeListActivity extends Activity {
         @Override
         public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
             super.onCreateOptionsMenu(menu, inflater);
-            inflater.inflate(R.menu.fragment_crime_list, menu);
+            inflater.inflate(R.menu.menu_fragment_crime_list, menu);
         }
 
         @Override
