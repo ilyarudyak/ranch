@@ -87,6 +87,9 @@ public class CrimeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_crime, container, false);
 
+        // set home button
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+
         // --------------- title of the crime -----------------------------
 
         mTitleField = (EditText)rootView.findViewById(R.id.crime_title);
