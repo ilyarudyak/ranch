@@ -7,6 +7,8 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
 
+import com.bignerdranch.android.photogallery.data.FlickrFetchr;
+
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

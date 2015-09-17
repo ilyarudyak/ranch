@@ -1,4 +1,4 @@
-package com.bignerdranch.android.photogallery;
+package com.bignerdranch.android.photogallery.data;
 
 import android.net.Uri;
 import android.util.Log;
@@ -73,6 +73,9 @@ public class FlickrFetchr {
         try {
             String jsonString = getUrlString(url);
             Log.i(TAG, "Received JSON: " + jsonString);
+
+            // we create JSON Object here instead of parseItems()
+            // usually I use jsonStr as an argument
             JSONObject jsonBody = new JSONObject(jsonString);
             parseItems(items, jsonBody);
         } catch (IOException ioe) {
@@ -95,6 +98,10 @@ public class FlickrFetchr {
         return uriBuilder.build().toString();
     }
 
+    /**
+     * This is JSON parser. We use JSONObject as an argument, not String.
+     * This method change items in place. Usually I don't use such methods.
+     * */
     private void parseItems(List<GalleryItem> items, JSONObject jsonBody)
             throws IOException, JSONException {
 
@@ -107,7 +114,9 @@ public class FlickrFetchr {
             GalleryItem item = new GalleryItem();
             item.setId(photoJsonObject.getString("id"));
             item.setCaption(photoJsonObject.getString("title"));
-            
+
+            // we don't add items that has no URL
+            // but in other cases we don't care
             if (!photoJsonObject.has("url_s")) {
                 continue;
             }

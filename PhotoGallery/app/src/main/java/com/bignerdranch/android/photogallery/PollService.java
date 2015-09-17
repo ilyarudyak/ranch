@@ -11,8 +11,10 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
+
+import com.bignerdranch.android.photogallery.data.FlickrFetchr;
+import com.bignerdranch.android.photogallery.data.GalleryItem;
 
 import java.util.List;
 

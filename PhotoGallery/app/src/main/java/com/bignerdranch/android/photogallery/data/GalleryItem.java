@@ -1,7 +1,8 @@
-package com.bignerdranch.android.photogallery;
+package com.bignerdranch.android.photogallery.data;
 
-import android.net.Uri;
-
+/**
+ * This is a model class for our data.
+ * */
 public class GalleryItem {
     private String mCaption;
     private String mId;
@@ -11,7 +12,6 @@ public class GalleryItem {
     public String getCaption() {
         return mCaption;
     }
-
     public void setCaption(String caption) {
         mCaption = caption;
     }
@@ -19,7 +19,6 @@ public class GalleryItem {
     public String getId() {
         return mId;
     }
-
     public void setId(String id) {
         mId = id;
     }
@@ -27,7 +26,6 @@ public class GalleryItem {
     public String getUrl() {
         return mUrl;
     }
-
     public void setUrl(String url) {
         mUrl = url;
     }
@@ -35,17 +33,8 @@ public class GalleryItem {
     public String getOwner() {
         return mOwner;
     }
-
     public void setOwner(String owner) {
         mOwner = owner;
-    }
-
-    public Uri getPhotoPageUri() {
-        return Uri.parse("http://www.flickr.com/photos/")
-                .buildUpon()
-                .appendPath(mOwner)
-                .appendPath(mId)
-                .build();
     }
 
     @Override

@@ -7,3 +7,5 @@
 *.jpg
 *.wav
 *.mpg
+/out
+
