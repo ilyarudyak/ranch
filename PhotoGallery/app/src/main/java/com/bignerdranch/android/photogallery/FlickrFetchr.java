@@ -3,6 +3,8 @@ package com.bignerdranch.android.photogallery;
 import android.net.Uri;
 import android.util.Log;
 
+import com.bignerdranch.android.photogallery.model.GalleryItem;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
