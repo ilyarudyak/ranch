@@ -4,4 +4,6 @@
     android:id="@+id/button"
     android:layout_width="match_parent"
     android:layout_height="120dp"
-    tools:text="Sound name"/>
+    android:layout_margin="2dp"
+    tools:text="Sound name"
+    />
