@@ -14,11 +14,9 @@ public class LauncherActivity extends AppCompatActivity {
             return;
         }
 
-        LauncherFragment launcherFragment = new LauncherFragment();
-        launcherFragment.setArguments(getIntent().getExtras());
         getFragmentManager()
                 .beginTransaction()
-                .add(android.R.id.content, launcherFragment)
+                .add(android.R.id.content, LauncherFragment.newInstance())
                 .commit();
     }
 }
