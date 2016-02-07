@@ -1,7 +1,9 @@
 package com.ilyarudyak.android.nerdlauncher;
 
 import android.app.Fragment;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
@@ -43,7 +45,7 @@ public class LauncherFragment extends Fragment {
 
         // set up recycler view
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(new ActivityAdapter(getActivities()));
+        mRecyclerView.setAdapter(new LauncherAdapter(getActivities()));
 
         return view;
     }
@@ -73,22 +75,46 @@ public class LauncherFragment extends Fragment {
     private class LauncherHolder extends RecyclerView.ViewHolder {
 
         private TextView mNameTextView;
+        private ResolveInfo mResolveInfo;
 
         public LauncherHolder(View itemView) {
             super(itemView);
             mNameTextView = (TextView) itemView;
+            mNameTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startApp();
+                }
+            });
         }
 
         public void bindActivity(ResolveInfo resolveInfo) {
             PackageManager pm = getActivity().getPackageManager();
             mNameTextView.setText(resolveInfo.loadLabel(pm).toString());
+            mResolveInfo = resolveInfo;
+        }
+
+        // helper method
+        private void startApp() {
+            ActivityInfo activityInfo = mResolveInfo.activityInfo;
+
+            Intent i = new Intent(Intent.ACTION_MAIN);
+
+            // this is an alternative to setClassName
+            ComponentName name = new ComponentName(activityInfo.packageName, activityInfo.name);
+            i.setComponent(name);
+
+//            i.setClassName(activityInfo.applicationInfo.packageName,
+//                    activityInfo.name);
+
+            startActivity(i);
         }
     }
-    private class ActivityAdapter extends RecyclerView.Adapter<LauncherHolder> {
+    private class LauncherAdapter extends RecyclerView.Adapter<LauncherHolder> {
 
         private List<ResolveInfo> mActivities;
 
-        public ActivityAdapter(List<ResolveInfo> activities) {
+        public LauncherAdapter(List<ResolveInfo> activities) {
             mActivities = activities;
         }
 
