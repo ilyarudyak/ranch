@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -75,11 +76,13 @@ public class LauncherFragment extends Fragment {
     private class LauncherHolder extends RecyclerView.ViewHolder {
 
         private TextView mNameTextView;
+        private ImageView mImageView;
         private ResolveInfo mResolveInfo;
 
         public LauncherHolder(View itemView) {
             super(itemView);
-            mNameTextView = (TextView) itemView;
+            mImageView = (ImageView) itemView.findViewById(R.id.app_icon_imageView);
+            mNameTextView = (TextView) itemView.findViewById(R.id.app_name_textView);
             mNameTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -89,9 +92,10 @@ public class LauncherFragment extends Fragment {
         }
 
         public void bindActivity(ResolveInfo resolveInfo) {
+            mResolveInfo = resolveInfo;
             PackageManager pm = getActivity().getPackageManager();
             mNameTextView.setText(resolveInfo.loadLabel(pm).toString());
-            mResolveInfo = resolveInfo;
+            mImageView.setImageDrawable(resolveInfo.loadIcon(pm));
         }
 
         // helper method
@@ -121,7 +125,7 @@ public class LauncherFragment extends Fragment {
         @Override
         public LauncherHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+            View view = layoutInflater.inflate(R.layout.list_item_with_icon, parent, false);
             return new LauncherHolder(view);
         }
 
