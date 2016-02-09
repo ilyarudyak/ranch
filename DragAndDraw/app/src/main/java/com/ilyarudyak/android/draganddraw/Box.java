@@ -2,10 +2,12 @@ package com.ilyarudyak.android.draganddraw;
 
 import android.graphics.PointF;
 
+import java.io.Serializable;
+
 /**
  * Created by ilyarudyak on 2/9/16.
  */
-public class Box {
+public class Box implements Serializable {
     private PointF mOrigin;
     private PointF mCurrent;
 

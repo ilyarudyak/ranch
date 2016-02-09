@@ -4,11 +4,14 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +23,7 @@ public class BoxDrawingView extends View {
     public static final String TAG = BoxDrawingView.class.getSimpleName();
 
     private Box mCurrentBox;
-    private List<Box> mBoxen = new ArrayList<>();
+    private List<Box> mBoxes = new ArrayList<>();
     private Paint mBoxPaint;
     private Paint mBackgroundPaint;
 
@@ -47,7 +50,7 @@ public class BoxDrawingView extends View {
                 action = "ACTION_DOWN";
                 // Reset drawing state
                 mCurrentBox = new Box(current);
-                mBoxen.add(mCurrentBox);
+                mBoxes.add(mCurrentBox);
                 break;
             case MotionEvent.ACTION_MOVE:
                 action = "ACTION_MOVE";
@@ -75,7 +78,7 @@ public class BoxDrawingView extends View {
     protected void onDraw(Canvas canvas) {
         canvas.drawPaint(mBackgroundPaint);
 
-        for (Box box : mBoxen) {
+        for (Box box : mBoxes) {
             float left = Math.min(box.getOrigin().x, box.getCurrent().x);
             float right = Math.max(box.getOrigin().x, box.getCurrent().x);
             float top = Math.min(box.getOrigin().y, box.getCurrent().y);
@@ -83,6 +86,22 @@ public class BoxDrawingView extends View {
 
             canvas.drawRect(left, top, right, bottom, mBoxPaint);
         }
+    }
+
+    // save and restore instance
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("super", super.onSaveInstanceState());
+        bundle.putSerializable("boxes", (Serializable) mBoxes);
+        return bundle;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        Bundle bundle = (Bundle) state;
+        mBoxes = (List<Box>) bundle.getSerializable("boxes");
+        super.onRestoreInstanceState(bundle.getParcelable("super"));
     }
 }
 
