@@ -66,7 +66,7 @@ public class LocatrFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_locatr, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -106,7 +106,7 @@ public class LocatrFragment extends Fragment {
                 .requestLocationUpdates(mClient, request, new LocationListener() {
                     @Override
                     public void onLocationChanged(Location location) {
-                        Log.d(TAG, "Got a fix: " + location);
+                        Log.i(TAG, "Got a fix: " + location);
 //                        new SearchTask().execute(location);
                     }
                 });
