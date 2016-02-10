@@ -8,6 +8,13 @@ public class SunsetActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sunset);
+
+        if (savedInstanceState != null) {
+            return;
+        }
+
+        getFragmentManager().beginTransaction()
+                .add(android.R.id.content, SunsetFragment.newInstance())
+                .commit();
     }
 }
