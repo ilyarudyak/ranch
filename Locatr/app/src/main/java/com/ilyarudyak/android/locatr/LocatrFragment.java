@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Fragment;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -20,6 +21,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
+import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -107,7 +112,7 @@ public class LocatrFragment extends Fragment {
                     @Override
                     public void onLocationChanged(Location location) {
                         Log.i(TAG, "Got a fix: " + location);
-//                        new SearchTask().execute(location);
+                        new SearchTask().execute(location);
                     }
                 });
     }
@@ -131,6 +136,39 @@ public class LocatrFragment extends Fragment {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    // ---------------------- async task ---------------------
+
+    private class SearchTask extends AsyncTask<Location,Void,Void> {
+        private GalleryItem mGalleryItem;
+
+        @Override
+        protected Void doInBackground(Location... params) {
+            FlickrFetchr fetchr = new FlickrFetchr();
+
+            Random rand = new Random();
+            rand.setSeed(0);
+            List<GalleryItem> items = fetchr.searchPhotos(params[0]);
+            int i = rand.nextInt(items.size());
+
+            if (items.size() != 0) {
+                mGalleryItem = items.get(i);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            //noinspection ConstantConditions,deprecation
+            if (mGalleryItem != null) {
+                Picasso.with(LocatrFragment.this.getActivity())
+                        .load(mGalleryItem.getUrl())
+                        .error(getResources().getDrawable(R.drawable.puppy_monkey_baby))
+                        .into(mImageView);
+            }
         }
     }
 
