@@ -4,6 +4,8 @@ import android.location.Location;
 import android.net.Uri;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,7 +48,8 @@ public class FlickrFetchr {
             String jsonString = getUrlString(url);
             Log.i(TAG, "Received JSON: " + jsonString);
             JSONObject jsonBody = new JSONObject(jsonString);
-            parseItems(items, jsonBody);
+            // ****** here we use Gson ******
+            parseItemsGson(items, jsonBody);
         } catch (IOException ioe) {
             Log.e(TAG, "Failed to fetch items", ioe);
         } catch (JSONException je) {
@@ -69,6 +72,31 @@ public class FlickrFetchr {
                 .appendQueryParameter("lat", "" + location.getLatitude())
                 .appendQueryParameter("lon", "" + location.getLongitude())
                 .build().toString();
+    }
+    private void parseItemsGson(List<GalleryItem> items, JSONObject jsonBody)
+            throws JSONException {
+        Gson gson = new Gson();
+
+        JSONObject photosJsonObject = jsonBody.getJSONObject("photos");
+        JSONArray photoJsonArray = photosJsonObject.getJSONArray("photo");
+
+        for (int i = 0; i < photoJsonArray.length(); i++) {
+            JSONObject photoJsonObject = photoJsonArray.getJSONObject(i);
+
+            GalleryItem item = gson.fromJson(photoJsonObject.toString(),
+                    GalleryItem.class);
+//            item.setId(photoJsonObject.getString("id"));
+//            item.setCaption(photoJsonObject.getString("title"));
+//
+//            if (!photoJsonObject.has("url_s")) {
+//                continue;
+//            }
+//
+//            item.setUrl(photoJsonObject.getString("url_s"));
+            items.add(item);
+        }
+
+
     }
     private void parseItems(List<GalleryItem> items, JSONObject jsonBody)
             throws IOException, JSONException {
